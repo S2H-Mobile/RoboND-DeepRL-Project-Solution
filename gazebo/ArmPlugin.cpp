@@ -33,16 +33,16 @@
 #define INPUT_WIDTH   64
 #define INPUT_HEIGHT  64
 #define OPTIMIZER "Adam"
-#define LEARNING_RATE 0.1f
+#define LEARNING_RATE 0.08f
 #define REPLAY_MEMORY 10000
-#define BATCH_SIZE 32
+#define BATCH_SIZE 256
 #define USE_LSTM true
-#define LSTM_SIZE 64
+#define LSTM_SIZE 256
 
 // Define Reward Parameters
 #define REWARD_WIN  10.0f
 #define REWARD_LOSS -10.0f
-#define INTERIM_REWARD_MULTIPLIER 10.0f
+#define INTERIM_REWARD_MULTIPLIER 8.0f
 #define MOVING_AVERAGE_ALPHA 0.9f
 
 // Define Object Names
@@ -261,6 +261,10 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 			
 			// issue reward based on whether the gripper collided with prop
 			rewardHistory = collisionWithGripper ? REWARD_WIN : REWARD_LOSS;
+		if(DEBUG)
+		{
+			std::cout << "collisionWithGripper = " << collisionWithGripper << ", EOE, rewardHistory = " << rewardHistory << "]\n";
+		}
 			newReward  = true;
 			endEpisode = true;
 			return;
@@ -425,7 +429,7 @@ bool ArmPlugin::updateJoints()
 		// update the AI agent when new camera frame is ready
 		episodeFrames++;
 
-		if(DEBUG){printf("episode frame = %i\n", episodeFrames);}
+		//if(DEBUG){printf("episode frame = %i\n", episodeFrames);}
 
 		// reset camera ready flag
 		newState = false;
@@ -564,7 +568,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 		if( checkGroundContact )
 		{
 						
-			if(DEBUG){printf("GROUND CONTACT, EOE\n");}
+			if(DEBUG){printf("Ground Contact, EOE\n");}
 
 			rewardHistory = REWARD_LOSS;
 			newReward     = true;
@@ -576,7 +580,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 		{
 			const float distGoal = BoxDistance(gripBBox, propBBox); // compute the reward from distance to the goal
 
-			if(DEBUG){printf("distance('%s', '%s') = %f\n", gripper->GetName().c_str(), prop->model->GetName().c_str(), distGoal);}
+			//if(DEBUG){printf("distance('%s', '%s') = %f\n", gripper->GetName().c_str(), prop->model->GetName().c_str(), distGoal);}
 
 			
 			if( episodeFrames > 1 )
@@ -589,11 +593,10 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 				// version 1
 				// rewardHistory = INTERIM_REWARD_MULTIPLIER * avgGoalDelta;
 				// version 2
-				rewardHistory = avgGoalDelta > 0 ? INTERIM_REWARD_MULTIPLIER * avgGoalDelta : REWARD_LOSS * distGoal;
-				// version 3
-				//rewardHistory = avgGoalDelta > 0 ? REWARD_WIN : REWARD_LOSS * distGoal;
+				rewardHistory = avgGoalDelta > 0 ? exp(10.0f * avgGoalDelta) * 2.0f : INTERIM_REWARD_MULTIPLIER * avgGoalDelta;
+				//rewardHistory = avgGoalDelta > 0 ? INTERIM_REWARD_MULTIPLIER * avgGoalDelta : REWARD_LOSS * distGoal;
 
-				if(DEBUG){printf("rewardHistory= %f\n", rewardHistory);}
+				if(DEBUG){printf("interim reward - rewardHistory= %f\n", rewardHistory);}
 
 				newReward     = true;	
 			}
@@ -605,7 +608,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 	// issue rewards and train DQN
 	if( newReward && agent != NULL )
 	{
-		if(DEBUG){printf("ArmPlugin - issuing reward %f, EOE=%s  %s\n", rewardHistory, endEpisode ? "true" : "false", (rewardHistory > 0.1f) ? "POS+" :(rewardHistory > 0.0f) ? "POS" : (rewardHistory < 0.0f) ? "    NEG" : "       ZERO");}
+		//if(DEBUG){printf("ArmPlugin - issuing reward %f, EOE=%s  %s\n", rewardHistory, endEpisode ? "true" : "false", (rewardHistory > 0.1f) ? "POS+" :(rewardHistory > 0.0f) ? "POS" : (rewardHistory < 0.0f) ? "    NEG" : "       ZERO");}
 		agent->NextReward(rewardHistory, endEpisode);
 
 		// reset reward indicator
