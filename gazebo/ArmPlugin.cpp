@@ -21,7 +21,6 @@
 #define VELOCITY_MAX  0.2f
 
 // Define DQN API Settings
-
 #define INPUT_CHANNELS 3
 #define ALLOW_RANDOM true
 #define DEBUG_DQN false
@@ -30,11 +29,7 @@
 #define EPS_END 0.02f
 #define EPS_DECAY 200
 
-/*
-/ TODO - Tune the following hyperparameters
-/
-*/
-
+// Define Learning Hyperparameters
 #define INPUT_WIDTH   64
 #define INPUT_HEIGHT  64
 #define OPTIMIZER "RMSprop"
@@ -44,11 +39,7 @@
 #define USE_LSTM true
 #define LSTM_SIZE 64
 
-/*
-/ TODO - Define Reward Parameters
-/
-*/
-
+// Define Reward Parameters
 #define REWARD_WIN  100.0f
 #define REWARD_LOSS -100.0f
 #define INTERIM_REWARD_MULTIPLIER 10.0f
@@ -560,9 +551,11 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 
 		// define the z value for  ground contact
 		const float groundContact = 0.05f;
+		
+		// define condition for ground contact
 		const bool checkGroundContact = ( gripBBox.min.z <= groundContact || gripBBox.max.z <= groundContact );
 		
-		// Set reward for robot hitting the ground
+		// issue reward for robot hitting the ground
 		if( checkGroundContact )
 		{
 						
@@ -573,10 +566,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 			endEpisode    = true;
 		}
 		
-		/*
-		/ TODO - Issue an interim reward based on the distance to the object
-		/
-		*/ 
+		// issue an interim reward based on the distance to the object 
 		if(!checkGroundContact)
 		{
 			const float distGoal = BoxDistance(gripBBox, propBBox); // compute the reward from distance to the goal
