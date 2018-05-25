@@ -24,10 +24,10 @@
 
 #define INPUT_CHANNELS 3
 #define ALLOW_RANDOM true
-#define DEBUG_DQN true
+#define DEBUG_DQN false
 #define GAMMA 0.9f
-#define EPS_START 0.9f
-#define EPS_END 0.05f
+#define EPS_START 0.7f
+#define EPS_END 0.02f
 #define EPS_DECAY 200
 
 /*
@@ -35,14 +35,14 @@
 /
 */
 
-#define INPUT_WIDTH   512
-#define INPUT_HEIGHT  512
+#define INPUT_WIDTH   64
+#define INPUT_HEIGHT  64
 #define OPTIMIZER "RMSprop"
 #define LEARNING_RATE 0.1f
 #define REPLAY_MEMORY 10000
-#define BATCH_SIZE 8
-#define USE_LSTM false
-#define LSTM_SIZE 32
+#define BATCH_SIZE 32
+#define USE_LSTM true
+#define LSTM_SIZE 64
 
 /*
 / TODO - Define Reward Parameters
@@ -51,6 +51,8 @@
 
 #define REWARD_WIN  100.0f
 #define REWARD_LOSS -100.0f
+#define INTERIM_REWARD_MULTIPLIER 10.0f
+#define MOVING_AVERAGE_ALPHA 0.9f
 
 // Define Object Names
 #define WORLD_NAME "arm_world"
@@ -66,7 +68,7 @@
 #define ANIMATION_STEPS 1000
 
 // Set Debug Mode
-#define DEBUG true
+#define DEBUG false
 
 // Lock base rotation DOF (Add dof in header file if off)
 #define LOCKBASE true
@@ -229,7 +231,7 @@ void ArmPlugin::onCameraMsg(ConstImageStampedPtr &_msg)
 	memcpy(inputBuffer[0], _msg->image().data().c_str(), inputBufferSize);
 	newState = true;
 
-	if(DEBUG){printf("camera %i x %i  %i bpp  %i bytes\n", width, height, bpp, size);}
+	//if(DEBUG){printf("camera %i x %i  %i bpp  %i bytes\n", width, height, bpp, size);}
 
 }
 
@@ -247,16 +249,18 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 		if( strcmp(contacts->contact(i).collision2().c_str(), COLLISION_FILTER) == 0 )
 			continue;
 
-		if(DEBUG){std::cout << "Collision between[" << contacts->contact(i).collision1()
-			     << "] and [" << contacts->contact(i).collision2() << "]\n";}
+		if(DEBUG)
+		{
+			std::cout << "Collision between [" << contacts->contact(i).collision1() << "] and [" << contacts->contact(i).collision2() << "]\n";
+		}
 	
 		/*
 		/ Check if there is collision between the arm and object, then issue learning reward.
 		/ Define a check condition to compare if particular links of the arm with their defined
 		/ collision elements are colliding with the COLLISION_ITEM or not.
+		/ collisionWithProp is true if first element in collision list is the tube_link
 		*/
 		const bool collisionWithProp = ( strcmp(contacts->contact(i).collision1().c_str(), COLLISION_ITEM) == 0 );
-		if(DEBUG){std::cout << "Collision with prop is " << collisionWithProp << ".\n";}
 
 		if (collisionWithProp)
 		{
@@ -298,11 +302,10 @@ bool ArmPlugin::updateAgent()
 		return false;
 	}
 
-	if(DEBUG){printf("ArmPlugin - agent selected action %i\n", action);}
+	//if(DEBUG){printf("ArmPlugin - agent selected action %i\n", action);}
 
 	 // coefficient of delta value, +1 for even actions, -1 for odd actions
 	const int c = 1 - 2 * (action % 2);
-	if(DEBUG){printf("ArmPlugin - action coefficient is %i\n", c);}
 
 #if VELOCITY_CONTROL
 	// if the action is even, increase the joint position by the delta parameter
@@ -557,9 +560,10 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 
 		// define the z value for  ground contact
 		const float groundContact = 0.05f;
+		const bool checkGroundContact = ( gripBBox.min.z <= groundContact || gripBBox.max.z <= groundContact );
 		
 		// Set reward for robot hitting the ground
-		if( gripBBox.min.z <= groundContact || gripBBox.max.z <= groundContact )
+		if( checkGroundContact )
 		{
 						
 			if(DEBUG){printf("GROUND CONTACT, EOE\n");}
@@ -585,12 +589,11 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 				const float distDelta  = lastGoalDistance - distGoal;
 
 				// compute the smoothed moving average of the delta of the distance to the goal
-				const float alpha = 0.9f;
-				avgGoalDelta  = (avgGoalDelta * alpha) + (distDelta * (1.0f - alpha));
+				avgGoalDelta  = (avgGoalDelta * MOVING_AVERAGE_ALPHA) + (distDelta * (1.0f - MOVING_AVERAGE_ALPHA));
 
-				if(DEBUG){printf("avgGoalDelta = %f\n",avgGoalDelta);}
+				if(DEBUG){printf("INTERIM_REWARD_MULTIPLIER * avgGoalDelta = %f\n", INTERIM_REWARD_MULTIPLIER * avgGoalDelta);}
 
-				rewardHistory = avgGoalDelta * 10.0f;
+				rewardHistory = INTERIM_REWARD_MULTIPLIER * avgGoalDelta;
 				newReward     = true;	
 			}
 
