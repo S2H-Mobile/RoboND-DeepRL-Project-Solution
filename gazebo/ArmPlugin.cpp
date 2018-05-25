@@ -40,8 +40,8 @@
 #define LSTM_SIZE 64
 
 // Define Reward Parameters
-#define REWARD_WIN  100.0f
-#define REWARD_LOSS -100.0f
+#define REWARD_WIN  10.0f
+#define REWARD_LOSS -10.0f
 #define INTERIM_REWARD_MULTIPLIER 10.0f
 #define MOVING_AVERAGE_ALPHA 0.9f
 
@@ -581,9 +581,15 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 				// compute the smoothed moving average of the delta of the distance to the goal
 				avgGoalDelta  = (avgGoalDelta * MOVING_AVERAGE_ALPHA) + (distDelta * (1.0f - MOVING_AVERAGE_ALPHA));
 
-				if(DEBUG){printf("INTERIM_REWARD_MULTIPLIER * avgGoalDelta = %f\n", INTERIM_REWARD_MULTIPLIER * avgGoalDelta);}
+				// version 1
+				// rewardHistory = INTERIM_REWARD_MULTIPLIER * avgGoalDelta;
+				// version 2
+				rewardHistory = avgGoalDelta > 0 ? INTERIM_REWARD_MULTIPLIER * avgGoalDelta : REWARD_LOSS * distGoal;
+				// version 3
+				//rewardHistory = avgGoalDelta > 0 ? REWARD_WIN : REWARD_LOSS * distGoal;
 
-				rewardHistory = INTERIM_REWARD_MULTIPLIER * avgGoalDelta;
+				if(DEBUG){printf("rewardHistory= %f\n", rewardHistory);}
+
 				newReward     = true;	
 			}
 
