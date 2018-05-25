@@ -249,13 +249,18 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 		/ Check if there is collision between the arm and object, then issue learning reward.
 		/ Define a check condition to compare if particular links of the arm with their defined
 		/ collision elements are colliding with the COLLISION_ITEM or not.
-		/ collisionWithProp is true if first element in collision list is the tube_link
 		*/
+		
+		// check is true if tube link is first element in collision list
 		const bool collisionWithProp = ( strcmp(contacts->contact(i).collision1().c_str(), COLLISION_ITEM) == 0 );
 
 		if (collisionWithProp)
 		{
-			rewardHistory = REWARD_WIN;
+			// check is true if gripper is second element in collision list
+			const bool collisionWithGripper = ( strcmp(contacts->contact(i).collision2().c_str(), COLLISION_POINT) == 0 );
+			
+			// issue reward based on whether the gripper collided with prop
+			rewardHistory = collisionWithGripper ? REWARD_WIN : REWARD_LOSS;
 			newReward  = true;
 			endEpisode = true;
 			return;
