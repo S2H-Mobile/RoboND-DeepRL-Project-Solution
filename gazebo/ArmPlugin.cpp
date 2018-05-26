@@ -261,10 +261,11 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 			
 			// issue reward based on whether the gripper collided with prop
 			rewardHistory = collisionWithGripper ? REWARD_WIN : REWARD_LOSS;
-		if(DEBUG)
-		{
-			std::cout << "collisionWithGripper = " << collisionWithGripper << ", EOE, rewardHistory = " << rewardHistory << "]\n";
-		}
+
+			if(DEBUG)
+			{
+				std::cout << "collisionWithGripper = " << collisionWithGripper << ", EOE, rewardHistory = " << rewardHistory << "]\n";
+			}
 			newReward  = true;
 			endEpisode = true;
 			return;
@@ -582,19 +583,18 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 
 			//if(DEBUG){printf("distance('%s', '%s') = %f\n", gripper->GetName().c_str(), prop->model->GetName().c_str(), distGoal);}
 
-			
 			if( episodeFrames > 1 )
 			{
 				const float distDelta  = lastGoalDistance - distGoal;
-
-				// compute the smoothed moving average of the delta of the distance to the goal
-				avgGoalDelta  = (avgGoalDelta * MOVING_AVERAGE_ALPHA) + (distDelta * (1.0f - MOVING_AVERAGE_ALPHA));
-
-				// version 1
-				// rewardHistory = INTERIM_REWARD_MULTIPLIER * avgGoalDelta;
-				// version 2
-				rewardHistory = avgGoalDelta > 0 ? exp(10.0f * avgGoalDelta) * 2.0f : INTERIM_REWARD_MULTIPLIER * avgGoalDelta;
-				//rewardHistory = avgGoalDelta > 0 ? INTERIM_REWARD_MULTIPLIER * avgGoalDelta : REWARD_LOSS * distGoal;
+				const float gamma = exp(-1.0f * distGoal);
+				// version 3
+				avgGoalDelta  = (avgGoalDelta * gamma) + (distDelta * (1.0f - gamma));
+				rewardHistory = 40.0f * avgGoalDelta;
+				// version 4
+				//avgGoalDelta  = (avgGoalDelta * MOVING_AVERAGE_ALPHA) + (distDelta * (1.0f - MOVING_AVERAGE_ALPHA));
+				//rewardHistory = gamma * INTERIM_REWARD_MULTIPLIER * avgGoalDelta;
+				// alternative functions
+				//rewardHistory = avgGoalDelta > 0 ? alpha * INTERIM_REWARD_MULTIPLIER * avgGoalDelta : distGoal * INTERIM_REWARD_MULTIPLIER * avgGoalDelta;
 
 				if(DEBUG){printf("interim reward - rewardHistory= %f\n", rewardHistory);}
 
