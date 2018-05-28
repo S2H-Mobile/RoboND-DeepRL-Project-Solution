@@ -42,8 +42,8 @@
 // Define Reward Parameters
 #define REWARD_WIN  10.0f
 #define REWARD_LOSS -10.0f
-#define INTERIM_REWARD_MULTIPLIER 8.0f
-#define MOVING_AVERAGE_ALPHA 0.9f
+#define INTERIM_REWARD 8.0f
+#define ALPHA 0.9f
 
 // Define Object Names
 #define WORLD_NAME "arm_world"
