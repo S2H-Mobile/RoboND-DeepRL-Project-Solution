@@ -257,10 +257,6 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 			// issue reward based on whether the gripper collided with prop
 			rewardHistory = collisionWithGripper ? REWARD_WIN : REWARD_LOSS;
 
-			if(DEBUG)
-			{
-				std::cout << "collisionWithGripper = " << collisionWithGripper << ", EOE, rewardHistory = " << rewardHistory << "]\n";
-			}
 			newReward  = true;
 			endEpisode = true;
 			return;
@@ -297,10 +293,8 @@ bool ArmPlugin::updateAgent()
 		printf("ArmPlugin - agent selected invalid action, %i\n", action);
 		return false;
 	}
-
-	//if(DEBUG){printf("ArmPlugin - agent selected action %i\n", action);}
-
-	 // coefficient of delta value, +1 for even actions, -1 for odd actions
+	
+	// coefficient of delta value, +1 for even actions, -1 for odd actions
 	const int c = 1 - 2 * (action % 2);
 
 #if VELOCITY_CONTROL
