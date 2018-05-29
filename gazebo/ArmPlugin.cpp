@@ -33,17 +33,18 @@
 #define INPUT_WIDTH   64
 #define INPUT_HEIGHT  64
 #define OPTIMIZER "Adam"
-#define LEARNING_RATE 0.08f
+#define LEARNING_RATE 0.1f
 #define REPLAY_MEMORY 10000
 #define BATCH_SIZE 256
 #define USE_LSTM true
 #define LSTM_SIZE 256
 
 // Define Reward Parameters
-#define REWARD_WIN  10.0f
-#define REWARD_LOSS -10.0f
-#define INTERIM_REWARD 8.0f
-#define ALPHA 0.5f
+#define REWARD_WIN  20.0f
+#define REWARD_LOSS -20.0f
+#define INTERIM_REWARD 4.0f
+#define INTERIM_OFFSET 0.3f
+#define ALPHA 0.4f
 
 // Define Object Names
 #define WORLD_NAME "arm_world"
@@ -576,23 +577,18 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 			const float distGoal = BoxDistance(gripBBox, propBBox); // compute the reward from distance to the goal
 
 			//if(DEBUG){printf("distance('%s', '%s') = %f\n", gripper->GetName().c_str(), prop->model->GetName().c_str(), distGoal);}
-
 			if( episodeFrames > 1 )
 			{
+				// compute delta of distance to the goal
 				const float distDelta  = lastGoalDistance - distGoal;
-				const float gamma = exp(-1.0f * distGoal);
-				// version 3
-				avgGoalDelta  = (avgGoalDelta * gamma) + (distDelta * (1.0f - gamma));
-				rewardHistory = 40.0f * avgGoalDelta;
-				// version 4
-				//avgGoalDelta  = (avgGoalDelta * MOVING_AVERAGE_ALPHA) + (distDelta * (1.0f - MOVING_AVERAGE_ALPHA));
-				//rewardHistory = gamma * INTERIM_REWARD_MULTIPLIER * avgGoalDelta;
-				// alternative functions
-				//rewardHistory = avgGoalDelta > 0 ? alpha * INTERIM_REWARD_MULTIPLIER * avgGoalDelta : distGoal * INTERIM_REWARD_MULTIPLIER * avgGoalDelta;
 
-				if(DEBUG){printf("interim reward - rewardHistory= %f\n", rewardHistory);}
+				// compute moving average 
+				avgGoalDelta  = (avgGoalDelta * ALPHA) + (distDelta * (1.0f - ALPHA));
 
-				newReward     = true;	
+				// linear reward function
+				rewardHistory = INTERIM_REWARD * avgGoalDelta - INTERIM_OFFSET;
+
+				newReward = true;	
 			}
 
 			lastGoalDistance = distGoal;
