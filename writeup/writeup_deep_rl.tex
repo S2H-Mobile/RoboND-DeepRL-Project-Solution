@@ -39,9 +39,9 @@ The network training along with the simulation runs were performed on the Udacit
 \label{sec:simulations}
 Before running simulation experiments, the following parts of the \href{https://github.com/S2H-Mobile/RoboND-DeepRL-Project-Solution/blob/develop/gazebo/ArmPlugin.cpp}{ArmPlugin.cpp} file were implemented.
 \begin{itemize}
-\item Subscribed to camera and collision topics.
-\item Created the DQN agent using learning hyperparameters defined as constants in the file.
-\item Defined collision checks to determine which robot arm link touched the target object.
+\item The subscription to camera and collision topics.
+\item The creation of the DQN agent using learning hyperparameters defined as constants in the file.
+\item The definition of collision checks to determine which robot arm link touched the target object.
 \item Both velocity control and position control of the robot were implemented.
 \item Criteria for ground contact of the arm were defined, see listing \ref{fig:listing_ground_contact}. The $z$-coordinates of the gripper link bounding box were used. The threshold ground level was set at $z=0.05$ meters to accommodate for the inaccuracy of the distance calculation.
 \end{itemize}
@@ -65,9 +65,9 @@ Several experimental runs of the simulation were performed, testing different ve
 
 \subsection{Reward Function Design}
 \label{sec:reward-function-design}
-A reward system was set up in order to teach the robotic arm how to reach for the target object. Positive and negative rewards are defined as numeric constants \texttt{REWARD\_WIN} and \texttt{REWARD\_LOSS}. A win is issued for touching the prop with any link (objective 1) or the gripper base link (objective 2). A loss is issued for ground contact of the arm and when the length of the episode exceeds $100$ time steps. Any of those events ends the episode.
+A reward system was set up in order to teach the robotic arm how to reach for the target object. Positive and negative rewards are defined as numeric constants \texttt{REWARD\_WIN} and \texttt{REWARD\_LOSS}. A win is issued for touching the prop with any link (objective 1) or the gripper base link (objective 2). A loss is issued when the arm touches the ground or when the length of the episode exceeds $100$ steps in time. The occurrence of any of these events will end the episode.
 
-Since positive rewards from touching the prop with the gripper link are very sparse, an interim reward function was to be designed. This function is supposed to guide the robot arm towards the target, so the distance between gripper and target object is the relevant measure. In order to obtain a smooth reward function, the difference of the goal distance between subsequent steps was calculated, and the moving average of this delta value was computed, see listing \ref{fig:source_smoothed_moving_average}. 
+Since positive rewards from touching the prop by the gripper link are very sparse, an interim reward function was designed. Its purpose is to guide the robot arm towards the target. The relevant measure is the distance $d_t$ between gripper and target object. For consecutive steps $t-1$ and $t$, the difference $\Delta_t = d_{t-1} - d_t$ was calculated. In order to obtain a smooth reward function, the moving average of the recorded $\Delta$ values was computed, see listing \ref{fig:source_smoothed_moving_average}. 
 \begin{figure}[htpb]
 \centering
 \begin{lstlisting}
@@ -117,13 +117,13 @@ rewardHistory = avgGoalDelta > 0
 \label{fig:reward_functions_objective_1}
 \end{figure}
 
-Both versions of the interim reward function were able to meet objective 1, see table \ref{tab:experiments_objective_1} and section \ref{sec:results}. The fixed configuration of the DQN agent used during the experimental runs is shown in figure \ref{fig:fixed_dqn_params_objective_1}.
+Both versions of the interim reward function met objective 1, see table \ref{tab:experiments_objective_1} and section \ref{sec:results}. The fixed configuration of the DQN agent used during the experimental runs is shown in figure \ref{fig:fixed_dqn_params_objective_1}.
 
 \subsubsection{Objective 2}
 The reward parameters and agent control were adjusted following advice from students on Slack community channel.
 \begin{itemize}
-\item Switched from velocity control to position control.
-\item Lowered the value of the moving average \texttt{ALPHA} from the initial guess of $0.9$ to values in the range $\left[0.4, 0.5\right]$.
+\item The velocity control was switched to position control.
+\item The value of the moving average \texttt{ALPHA} was lowered from the initial guess of $0.9$ to values in the range $\left[0.4, 0.5\right]$.
 \end{itemize}
 
 In order to explore alternatives to the linear reward function, the effect of an exponential function of the distance of the form
@@ -155,7 +155,7 @@ rewardHistory = 40.0f * avgGoalDelta;
 \label{fig:exponential_damping_moving_average}
 \end{figure}
 
-In subsequent experiments a linear reward function was used again, see listing \ref{fig:linear_reward_function_objective_2}. A negative offset was introduced to punish standstill and moving away from the target. The parameters \texttt{INTERIM\_REWARD} and \texttt{INTERIM\_OFFSET} represent the slope and the offset, respectively. Together with the alpha parameter of the moving average they were tuned experimentally, see table \ref{tab:reward_param_tuning_objective_2}. During the experiments, \texttt{REWARD\_WIN} was set to $20.0$, and \texttt{REWARD\_LOSS} was set to $-20.0$.  The configuration of the DQN agent used during the experimental runs is shown in table \ref{tab:reward_param_tuning_objective_2} and figure \ref{fig:fixed_dqn_params_exp_3_objective_2}. Objective 2 was met using the linear reward function.
+In subsequent experiments, a linear reward function was used again, see listing \ref{fig:linear_reward_function_objective_2}. A negative offset was introduced to punish standstill or the moving away from the target. The parameters \texttt{INTERIM\_REWARD} and \texttt{INTERIM\_OFFSET} represent the slope and the offset, respectively. These parameters, together with the alpha parameter of the moving average were tuned experimentally, see table \ref{tab:reward_param_tuning_objective_2}. During the experiments, \texttt{REWARD\_WIN} was set to $20.0$, and \texttt{REWARD\_LOSS} was set to $-20.0$.  The configuration of the DQN agent used during the experimental runs is shown in table \ref{tab:reward_param_tuning_objective_2} and figure \ref{fig:fixed_dqn_params_exp_3_objective_2}. Objective 2 was met using the linear reward function.
 
 \begin{figure}[thpb]
 \centering
@@ -303,10 +303,10 @@ The best performing configurations for each objective are shown in table \ref{ta
 \end{figure}
 
 \section{Future Work}
-The reinforcement learning framework can be improved further as follows.
+The reinforcement-learning framework can be improved further by:
 \begin{itemize}
-\item Tune the remaining DQN hyperparameters like the discount factor, size of replay memory, and epsilon decay rate.
-\item Investigate whether the exponential damping function \ref{eqn:exponential_damping} can be improved to create a reward function that is able to achieve the objectives. 
+\item Tuning the remaining DQN hyperparameters like the discount factor, size of replay memory, and epsilon decay rate.
+\item Investigating whether the exponential damping function \ref{eqn:exponential_damping} can be improved to create a reward function able to achieve the objectives. 
 \end{itemize}
 
 Additionally, the plan is to let the project run on the Jetson TX2. It will also be interesting to see how well the framework generalizes to controlling a robotic arm with enhanced capabilities and more degrees of freedom.
