@@ -9,9 +9,10 @@ The implementations of the tasks can be found in the file [`ArmPlugin.cpp`](gaze
 This project runs on Ubuntu Linux with Gazebo installed. Follow the instructions in the [Deep RL Arm Manipulation](https://github.com/udacity/RoboND-DeepRL-Project) project.
 
 ## Usage
-To launch the project environment, change directories to the `bin` folder and run
+To launch the project environment in the VM, change directory to `bin` and run the script `gazebo-arm.sh`. 
 
 ``` bash
+$ cd /home/workspace/RoboND-DeepRL-Project/build/x86_64/bin
 $ ./gazebo-arm.sh
 ```
 This starts Gazebo and runs the training script.
