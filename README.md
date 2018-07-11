@@ -17,4 +17,4 @@ $ ./gazebo-arm.sh
 ```
 This starts Gazebo and runs the training script.
 
-<img src="https://github.com/dusty-nv/jetson-reinforcement/raw/master/docs/images/gazebo_arm.jpg">
+<img src="screenshot_rl_arm.PNG">
