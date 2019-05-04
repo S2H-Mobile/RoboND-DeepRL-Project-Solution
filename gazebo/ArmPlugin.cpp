@@ -337,14 +337,14 @@ bool ArmPlugin::updateAgent()
 	{
 		ref[n] += vel[n];
 
-		if( ref[n] < JOINT_MIN )
+		if( ref[n] < jointRange[n][0] )
 		{
-			ref[n] = JOINT_MIN;
+			ref[n] = jointRange[n][0];
 			vel[n] = 0.0f;
 		}
-		else if( ref[n] > JOINT_MAX )
+		else if( ref[n] > jointRange[n][1] )
 		{
-			ref[n] = JOINT_MAX;
+			ref[n] = jointRange[n][1];
 			vel[n] = 0.0f;
 		}
 	}
@@ -354,11 +354,11 @@ bool ArmPlugin::updateAgent()
 	float joint = ref[action/2] + c * actionJointDelta;
 
 	// limit the joint to the specified range
-	if( joint < JOINT_MIN )
-		joint = JOINT_MIN;
+	if( joint < jointRange[action/2][0] )
+		joint = jointRange[action/2][0];
 	
-	if( joint > JOINT_MAX )
-		joint = JOINT_MAX;
+	if( joint > jointRange[action/2][1] )
+		joint = jointRange[action/2][1];
 
 	ref[action/2] = joint;
 
