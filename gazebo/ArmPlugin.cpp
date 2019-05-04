@@ -409,10 +409,10 @@ bool ArmPlugin::updateJoints()
 			else if( ref[n] > resetPos[n] )
 				ref[n] -= step;
 
-			if( ref[n] < JOINT_MIN )
-				ref[n] = JOINT_MIN;
-			else if( ref[n] > JOINT_MAX )
-				ref[n] = JOINT_MAX;
+			if( ref[n] < jointRange[n][0] )
+				ref[n] = jointRange[n][0];
+			else if( ref[n] > jointRange[n][1] )
+				ref[n] = jointRange[n][1];
 			
 		}
 
