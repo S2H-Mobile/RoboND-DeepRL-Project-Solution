@@ -67,8 +67,8 @@
 #define LOCKBASE true
 
 // Define Gazebo topic names
-#define CAMERA_TOPIC "/gazebo/arm_world/camera/link/camera/image"
-#define COLLISION_TOPIC "/gazebo/arm_world/tube/tube_link/my_contact"
+#define CAMERA_TOPIC "/gazebo/" WORLD_NAME "/camera/link/camera/image"
+#define COLLISION_TOPIC "/gazebo/" WORLD_NAME "/" PROP_NAME "/link/my_contact"
 
 namespace gazebo
 {
