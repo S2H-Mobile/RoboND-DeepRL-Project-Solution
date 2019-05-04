@@ -15,6 +15,8 @@
 
 #define JOINT_MIN	-0.75f
 #define JOINT_MAX	 2.0f
+#define BASE_JOINT_MIN -0.75f
+#define BASE_JOINT_MAX  0.75f
 
 // Turn on velocity based control
 #define VELOCITY_CONTROL false
@@ -91,6 +93,20 @@ ArmPlugin::ArmPlugin() : ModelPlugin(), cameraNode(new gazebo::transport::Node()
 	{
 		ref[n] = resetPos[n]; //JOINT_MIN;
 		vel[n] = 0.0f;
+	}
+
+	// set the joint ranges
+	for( uint32_t n=0; n < DOF; n++ )
+	{
+		jointRange[n][0] = JOINT_MIN;
+		jointRange[n][1] = JOINT_MAX;
+	}
+
+	// if the base is freely rotating, set it's range separately
+	if( !LOCKBASE )
+	{
+		jointRange[0][0] = BASE_JOINT_MIN;
+		jointRange[0][1] = BASE_JOINT_MAX;
 	}
 
 	agent 	       = NULL;
