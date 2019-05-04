@@ -375,31 +375,6 @@ bool ArmPlugin::updateJoints()
 	{
 		const float step = (JOINT_MAX - JOINT_MIN) * (float(1.0f) / float(ANIMATION_STEPS));
 
-#if 0
-		// range of motion
-		if( animationStep < ANIMATION_STEPS )
-		{
-			animationStep++;
-			printf("animation step %u\n", animationStep);
-
-			for( uint32_t n=0; n < DOF; n++ )
-				ref[n] = JOINT_MIN + step * float(animationStep);
-		}
-		else if( animationStep < ANIMATION_STEPS * 2 )
-		{			
-			animationStep++;
-			printf("animation step %u\n", animationStep);
-
-			for( uint32_t n=0; n < DOF; n++ )
-				ref[n] = JOINT_MAX - step * float(animationStep-ANIMATION_STEPS);
-		}
-		else
-		{
-			animationStep = 0;
-
-		}
-
-#else
 		// return to base position
 		for( uint32_t n=0; n < DOF; n++ )
 		{
@@ -417,7 +392,6 @@ bool ArmPlugin::updateJoints()
 		}
 
 		animationStep++;
-#endif
 
 		// reset and loop the animation
 		if( animationStep > ANIMATION_STEPS )
