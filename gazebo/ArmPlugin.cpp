@@ -6,6 +6,7 @@
 
 #include "ArmPlugin.h"
 #include "PropPlugin.h"
+#include "GazeboUtils.h"
 
 #include "cudaMappedMemory.h"
 #include "cudaPlanar.h"
