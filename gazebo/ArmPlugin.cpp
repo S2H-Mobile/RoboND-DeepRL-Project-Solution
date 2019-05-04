@@ -56,8 +56,9 @@
 
 // Define Collision Parameters
 #define COLLISION_FILTER "ground_plane::link::collision"
-#define COLLISION_ITEM   "tube::tube_link::tube_collision"
+#define COLLISION_ITEM   "tube::link::tube_collision"
 #define COLLISION_POINT  "arm::gripperbase::gripper_link"
+//#define COLLISION_POINT  "arm::gripper_middle::middle_collision"
 
 // Animation Steps
 #define ANIMATION_STEPS 1000
