@@ -85,11 +85,14 @@ ArmPlugin::ArmPlugin() : ModelPlugin(), cameraNode(new gazebo::transport::Node()
 {
 	printf("ArmPlugin::ArmPlugin()\n");
 
+	// set the default reset position for each joint
 	for( uint32_t n=0; n < DOF; n++ )
 		resetPos[n] = 0.0f;
 
+        // make the arm canted forward a little
 	resetPos[1] = 0.25;
 
+	// set the initial positions and velocities to the reset
 	for( uint32_t n=0; n < DOF; n++ )
 	{
 		ref[n] = resetPos[n]; //JOINT_MIN;
