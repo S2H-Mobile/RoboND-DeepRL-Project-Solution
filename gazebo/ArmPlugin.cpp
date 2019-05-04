@@ -608,8 +608,11 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 				successfulGrabs++;
 
 			totalRuns++;
-			printf("Current Accuracy:  %0.4f (%03u of %03u)  (reward=%+0.2f %s)\n", float(successfulGrabs)/float(totalRuns), successfulGrabs, totalRuns, rewardHistory, (rewardHistory >= REWARD_WIN ? "WIN" : "LOSS"));
 
+			// print the current performance
+			const float accuracy = float(successfulGrabs)/float(totalRuns);
+			const std::string flag = rewardHistory >= REWARD_WIN ? "WIN" : "LOSS";
+			printf("Current Accuracy:  %0.4f (%03u of %03u)  (reward=%+0.2f %s)\n", accuracy, successfulGrabs, totalRuns, rewardHistory, flag.c_str());
 
 			for( uint32_t n=0; n < DOF; n++ )
 				vel[n] = 0.0f;
