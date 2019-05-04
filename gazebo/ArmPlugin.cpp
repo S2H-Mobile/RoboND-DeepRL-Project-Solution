@@ -67,7 +67,7 @@
 #define DEBUG false
 
 // Lock base rotation DOF (Add dof in header file if off)
-#define LOCKBASE true
+#define LOCKBASE false
 
 // Define Gazebo topic names
 #define CAMERA_TOPIC "/gazebo/" WORLD_NAME "/camera/link/camera/image"
