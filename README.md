@@ -18,7 +18,7 @@ The solution is documented in the [writeup report](writeup/writeup_deep_rl.pdf),
 ## Setup and Usage
 
 ### Jetson TX2
-1. Follow the instructions given in [dusty-nv/jetson-reinforcement](https://github.com/dusty-nv/jetson-reinforcement).
+1. Follow the setup instructions given in [dusty-nv/jetson-reinforcement](https://github.com/dusty-nv/jetson-reinforcement).
 2. Replace the file `jetson-reinforcement/gazebo/ArmPlugin.cpp` with [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp).
 3. Change working directory to the `build` folder and `make` the project.
 4. Change working directory to the `bin` folder and launch the script `./gazebo-arm.sh`. This starts Gazebo and runs the training script.
