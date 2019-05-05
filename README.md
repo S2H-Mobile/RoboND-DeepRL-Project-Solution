@@ -15,22 +15,28 @@ The solution is implemented in the file [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp),
 
 The solution is documented in the [writeup report](writeup/writeup_deep_rl.pdf), which contains a discussion of the implemented reward functions and hyperparameter configurations as well as experimental results.
 
-## Setup and Usage
-
+## Setup
 ### Jetson TX2
-1. Follow the setup instructions given in [dusty-nv/jetson-reinforcement](https://github.com/dusty-nv/jetson-reinforcement).
+1. Follow the setup instructions given in [jetson-reinforcement](https://github.com/dusty-nv/jetson-reinforcement).
 2. Replace the file `jetson-reinforcement/gazebo/ArmPlugin.cpp` with [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp).
 3. Change working directory to the `build` folder and `make` the project.
-4. Change working directory to the `bin` folder and launch the script `./gazebo-arm.sh`. This starts Gazebo and runs the training script.
+### RoboND Workspace
+1. Follow the setup instructions given in the [Deep RL Arm Manipulation](https://github.com/udacity/RoboND-DeepRL-Project) project.
+2. Replace the file `RoboND-DeepRL-Project/gazebo/ArmPlugin.cpp` with [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp).
+3. Change working directory to the `build` folder and `make` the project.
 
-### On the RoboND workspace
-This project runs on Ubuntu Linux with Gazebo installed. Follow the instructions in the [Deep RL Arm Manipulation](https://github.com/udacity/RoboND-DeepRL-Project) project.
-
-To launch the project environment in the VM, change directory to `bin` and run the script `gazebo-arm.sh`. 
-
+## Usage
+1. Change working directory to the `bin` folder.
+2. Run the script `./gazebo-arm.sh`.
+### Jetson TX2
+``` bash
+$ cd /home/nvidia/jetson-reinforcement/build/aarch64/bin
+$ ./gazebo-arm.sh
+```
+### RoboND Workspace
 ``` bash
 $ cd /home/workspace/RoboND-DeepRL-Project/build/x86_64/bin
 $ ./gazebo-arm.sh
 ```
-This starts Gazebo and runs the training script.
 
+This launches Gazebo and and starts the DQN training loop. After each episode, the current accuracy of the agent is printed to the console.
