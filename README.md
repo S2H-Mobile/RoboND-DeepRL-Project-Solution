@@ -13,7 +13,7 @@ The project goal is to optimize the performance of this reinforcement learning a
 
 The solution is implemented in the file [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp), which is meant to replace the corresponding file in the  [dusty-nv/jetson-reinforcement](https://github.com/dusty-nv/jetson-reinforcement) repository.
 
-The solution is documented in the [writeup report](writeup/writeup_deep_rl.pdf).
+The solution is documented in the [writeup report](writeup/writeup_deep_rl.pdf), which contains a discussion of the implemented reward functions and hyperparameter configurations as well as experimental results.
 
 ## Setup and Usage
 
