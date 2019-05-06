@@ -403,7 +403,7 @@ bool ArmPlugin::updateJoints()
 		}
 		else if( animationStep == ANIMATION_STEPS / 2 )
 		{	
-			ResetPropDynamics();
+			RandomizeProps();
 		}
 
 		return true;
