@@ -40,3 +40,28 @@ $ ./gazebo-arm.sh
 ```
 
 This launches Gazebo and and starts the DQN training loop. After each episode, the current accuracy of the agent is printed to the console.
+
+## Configuration
+The arm can be configured to rotate abouts its base, and the tube can be spawn at a random position within the arm's reach.
+In order to modify the behaviour of the robot arm and the prop models, the code in `ArmPlugin.cpp`, `PropPlugin.cpp`, and `gazebo-arm.world` must be adjusted.
+
+### Challenge for Project Submission
+- The arm can not rotate about its base.
+  - In `ArmPlugin.cpp`, the parameter `LOCKBASE` is set to `true`.
+  - In `gazebo-arm.world`, the tube model's pose is set to `<pose>1.15 0 0 0 0 0</pose>`.
+- The position of the tube is not randomized.
+  - In `ArmPlugin::updateJoints()`, the function `ResetPropDynamics()` is called.
+### Additional Challenge
+- The arm can rotate about its base.
+  - In `ArmPlugin.cpp`, the parameter `LOCKBASE` is set to `false`.
+  - In `gazebo-arm.world`, the tube model's pose is set to `<pose>0.75 0.75 0 0 0 0</pose>`.
+- The position of the tube is randomized.
+  - In `ArmPlugin::updateJoints()`, the function `RandomizeProps()` is called.
+  - In `PropPlugin::Randomize()`, the position of the tube is set according to
+  ```
+  pose.pos.x = randf(0.35f, 0.45f);
+  pose.pos.y = randf(-1.5f, 0.2f);
+  pose.pos.z = 0.0f;
+  ```
+
+The project is configured with arm rotation enabled and randomization of the tube's position.
