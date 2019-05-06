@@ -480,6 +480,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 	// if an EOE reward hasn't already been issued, compute an intermediary reward
 	if( hadNewState && !newReward )
 	{
+		// retrieve the goal prop model object
 		PropPlugin* prop = GetPropByName(PROP_NAME);
 
 		if( !prop )
@@ -501,7 +502,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 			return;
 		}
 
-		// get the bounding box for the gripper		
+		// if the robot impacts the ground, count it as a loss
 		const math::Box& gripBBox = gripper->GetBoundingBox();
 
 		// define the z value for  ground contact
