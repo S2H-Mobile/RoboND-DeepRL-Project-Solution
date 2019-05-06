@@ -488,6 +488,9 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 			return;
 		}
 
+		// remember where the user moved the prop to for when it's reset
+		prop->UpdateResetPose();
+
 		// get the bounding box for the prop object
 		const math::Box& propBBox = prop->model->GetBoundingBox();
 		physics::LinkPtr gripper  = model->GetLink(GRIP_NAME);
