@@ -42,7 +42,13 @@ $ ./gazebo-arm.sh
 This launches Gazebo and and starts the DQN training loop. After each episode, the current accuracy of the agent is printed to the console.
 
 ## Configuration
-The arm can be configured to rotate abouts its base, and the tube can be spawn at a random position within the arm's reach.
+The project can be configured to alter the capabilities of the robot arm and the difficulty of the RL task. 
+
+- The control of the arm's joints can be velocity or position based.
+- The arm can be configured to rotate abouts its base.
+- The target object can be spawned at a user defined position or a random position within the arm's reach.
+- Define which link is checked for collision with the target object.
+
 In order to modify the behaviour of the robot arm and the prop models, the code in `ArmPlugin.cpp`, `PropPlugin.cpp`, and `gazebo-arm.world` must be adjusted.
 
 ### Challenge for Project Submission
@@ -64,4 +70,4 @@ In order to modify the behaviour of the robot arm and the prop models, the code 
   pose.pos.z = 0.0f;
   ```
 
-The project is configured with arm rotation enabled and randomization of the tube's position.
+The project is configured with arm rotation enabled, and the target object is spawned at a random position.
