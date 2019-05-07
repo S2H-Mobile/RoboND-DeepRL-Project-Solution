@@ -403,7 +403,7 @@ bool ArmPlugin::updateJoints()
 		}
 		else if( animationStep == ANIMATION_STEPS / 2 )
 		{	
-			ResetPropDynamics();
+			RandomizeProps();
 		}
 
 		return true;
@@ -480,6 +480,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 	// if an EOE reward hasn't already been issued, compute an intermediary reward
 	if( hadNewState && !newReward )
 	{
+		// retrieve the goal prop model object
 		PropPlugin* prop = GetPropByName(PROP_NAME);
 
 		if( !prop )
@@ -487,6 +488,9 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 			printf("ArmPlugin - failed to find Prop '%s'\n", PROP_NAME);
 			return;
 		}
+
+		// remember where the user moved the prop to for when it's reset
+		prop->UpdateResetPose();
 
 		// get the bounding box for the prop object
 		const math::Box& propBBox = prop->model->GetBoundingBox();
@@ -498,7 +502,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 			return;
 		}
 
-		// get the bounding box for the gripper		
+		// if the robot impacts the ground, count it as a loss
 		const math::Box& gripBBox = gripper->GetBoundingBox();
 
 		// define the z value for  ground contact
