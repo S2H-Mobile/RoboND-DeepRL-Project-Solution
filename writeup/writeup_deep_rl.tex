@@ -311,6 +311,51 @@ The reinforcement-learning framework can be improved further by:
 
 Additionally, the plan is to let the project run on the Jetson TX2. It will also be interesting to see how well the framework generalizes to controlling a robotic arm with enhanced capabilities and more degrees of freedom.
 
+\subsection*{Addendum, May 2019} The project has been improved as follows.
+\begin{itemize}
+\item The project is running on the Jetson TX2 and can be used with either \href{https://github.com/udacity/RoboND-DeepRL-Project}{RoboND-DeepRL-Project} or \href{https://github.com/dusty-nv/jetson-reinforcement}{jetson-reinforcement}.
+\item The code for the additional challenge of increasing the arm's reach is implemented. The revolute joint in the base link is activated, for implementation details see table \ref{tab:configuration_arm_rotation}. The arm can rotate about its base within the joint limits. This adds a third degree of freedom to the configuration space.
+\item The code for object randomization is implemented. In the method \texttt{ArmPlugin::updateJoints()}, the call to \texttt{ResetPropDynamics()} is replaced with \texttt{RandomizeProps()}. At the beginning of an episode the target object is placed randomly within the arm's reach, see figure \ref{fig:random_poses_for_arm_rotation} for implementation details.
+\end{itemize}
+
+\begin{table}[thpb]
+	\centering
+	\renewcommand{\arraystretch}{1.3}
+	\begin{tabular}{|l|l|l|}
+	\hline
+	Arm rotation & Enabled & Disabled \\
+	\hline
+	\texttt{ArmPlugin.cpp}   & \texttt{\#define LOCKBASE false} & \texttt{\#define LOCKBASE true} \\
+	\hline
+	\begin{tabular}[b]{@{}l@{}}Tube model pose in\\ \texttt{gazebo-arm.world}\end{tabular} & \texttt{[0.75 0.75 0 0 0 0]} & \texttt{[1.15 0 0 0 0 0]}\\
+	\hline
+	\end{tabular}
+	\caption{Project configurations for toggling the revolute joint in the arm's base link.}
+	\label{tab:configuration_arm_rotation}
+\end{table}
+
+\begin{figure}[thpb]
+\centering
+\begin{subfigure}{.48\textwidth}
+\begin{lstlisting}
+pose.pos.x = randf(0.02f, 0.30f);
+pose.pos.y = 0.0f;
+pose.pos.z = 0.0f;
+\end{lstlisting}
+\caption{Arm rotation disabled.}
+\end{subfigure}\hfill%
+\begin{subfigure}{.48\textwidth}
+\begin{lstlisting}
+pose.pos.x = randf(0.35f, 0.45f);
+pose.pos.y = randf(-1.5f, 0.2f);
+pose.pos.z = 0.0f;
+\end{lstlisting}
+\caption{Arm rotation enabled.}
+\end{subfigure}
+\caption{Limits for random initialization of target object pose in \texttt{PropPlugin::Randomize()}.}
+\label{fig:random_poses_for_arm_rotation}
+\end{figure}
+
 \begin{thebibliography}{1}
 \bibitem{adam_paper}
 Diederik P. Kingma and Jimmy Ba, \textit{Adam: {A} Method for Stochastic Optimization}, CoRR, 2014, \href{http://arxiv.org/abs/1412.6980}{arXiv  abs/1412.6980}
