@@ -57,7 +57,9 @@
 // Define Collision Parameters
 #define COLLISION_FILTER "ground_plane::link::collision"
 #define COLLISION_ITEM   "tube::link::tube_collision"
+// reference point as per definition in udacity/RoboND-DeepRL-Project
 #define COLLISION_POINT  "arm::gripperbase::gripper_link"
+// reference point as per definition in dusty-nv/jetson-reinforcement
 //#define COLLISION_POINT  "arm::gripper_middle::middle_collision"
 
 // Animation Steps
