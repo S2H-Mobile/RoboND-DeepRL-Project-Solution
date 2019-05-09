@@ -58,7 +58,7 @@
 #define COLLISION_FILTER "ground_plane::link::collision"
 #define COLLISION_ITEM   "tube::link::tube_collision"
 // reference point as per definition in udacity/RoboND-DeepRL-Project
-#define COLLISION_POINT  "arm::gripperbase::gripper_link"
+#define COLLISION_POINT_ROBOND  "arm::gripperbase::gripper_link"
 // reference point as per definition in dusty-nv/jetson-reinforcement
 //#define COLLISION_POINT  "arm::gripper_middle::middle_collision"
 
@@ -275,7 +275,7 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 		if (collisionWithProp)
 		{
 			// check is true if gripper_link is second element in collision list
-			const bool collisionWithGripper = ( strcmp(contacts->contact(i).collision2().c_str(), COLLISION_POINT) == 0 );
+			const bool collisionWithGripper = ( strcmp(contacts->contact(i).collision2().c_str(), COLLISION_POINT_ROBOND) == 0 );
 			
 			// issue reward based on whether the gripper collided with prop
 			rewardHistory = collisionWithGripper ? REWARD_WIN : REWARD_LOSS;
