@@ -60,7 +60,7 @@
 // reference point as per definition in udacity/RoboND-DeepRL-Project
 #define COLLISION_POINT_ROBOND  "arm::gripperbase::gripper_link"
 // reference point as per definition in dusty-nv/jetson-reinforcement
-//#define COLLISION_POINT  "arm::gripper_middle::middle_collision"
+#define COLLISION_POINT  "arm::gripper_middle::middle_collision"
 
 // Animation Steps
 #define ANIMATION_STEPS 1000
