@@ -525,7 +525,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 		}
 		
 		// issue an interim reward based on the distance to the object 
-		if(!checkGroundContact)
+		else
 		{
 			const float distGoal = BoxDistance(gripBBox, propBBox); // compute the reward from distance to the goal
 
