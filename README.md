@@ -18,11 +18,11 @@ The solution is documented in the [writeup report](writeup/writeup_deep_rl.pdf),
 ## Setup
 ### Jetson TX2
 1. Follow the setup instructions given in [jetson-reinforcement](https://github.com/dusty-nv/jetson-reinforcement).
-2. Replace the file `jetson-reinforcement/gazebo/ArmPlugin.cpp` with [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp).
+2. Replace the file `jetson-reinforcement/gazebo/ArmPlugin.cpp` with [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp) and the file `jetson-reinforcement/gazebo/gazebo-arm.world` with [`gazebo-arm.world`](gazebo/gazebo-arm.world). [This bash script](utils/copyFilesToJetsonReinforcement.sh) automates copying the files.
 3. Change working directory to the `build` folder and `make` the project.
 ### RoboND Workspace
 1. Follow the setup instructions given in the [Deep RL Arm Manipulation](https://github.com/udacity/RoboND-DeepRL-Project) project.
-2. Replace the file `RoboND-DeepRL-Project/gazebo/ArmPlugin.cpp` with [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp).
+2. Replace the file `RoboND-DeepRL-Project/gazebo/ArmPlugin.cpp` with [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp) and the file `RoboND-DeepRL-Project/gazebo/gazebo-arm.world` with [`gazebo-arm.world`](gazebo/gazebo-arm.world).
 3. Change working directory to the `build` folder and `make` the project.
 
 ## Usage
