@@ -1,7 +1,7 @@
 
 # RoboND-DeepRL-Project-Solution
 
-<img src="screenshot_rl_arm.PNG">
+<img src="screenshot_rl_arm.png">
 
 This is a solution of the [Deep RL Arm Manipulation](https://github.com/udacity/RoboND-DeepRL-Project) project as part of the Robotics Nanodegree. This project is based on the Nvidia open source project [dusty-nv/jetson-reinforcement](https://github.com/dusty-nv/jetson-reinforcement) by Dustin Franklin.
 
