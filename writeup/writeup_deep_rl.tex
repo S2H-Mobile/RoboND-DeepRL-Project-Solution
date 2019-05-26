@@ -356,9 +356,17 @@ pose.pos.z = 0.0f;
 \label{fig:random_poses_for_arm_rotation}
 \end{figure}
 
-\begin{thebibliography}{1}
+For the advanced task configuration with randomized object placement and enabled arm rotation, the agent is successful in only about $20 \%$ of the episodes. To improve the performance of the agent, the following approaches seem promising.
+\begin{enumerate}
+\item  An approach based on Hindsight Experience Replay \cite{her_paper} seems promising in dealing with the sparse rewards provided by the environment.
+\item Consider the geometry of the arm and camera poses. The camera can not capture the arm movement well when the arm moves in a direction perpendicular to the image plane. One way to improve this might be to promote the camera pose to a dynamic degree of freedom, and let the DQN must learn a suitable camera angle.
+\end{enumerate}
+
+\begin{thebibliography}{2}
 \bibitem{adam_paper}
 Diederik P. Kingma and Jimmy Ba, \textit{Adam: {A} Method for Stochastic Optimization}, CoRR, 2014, \href{http://arxiv.org/abs/1412.6980}{arXiv  abs/1412.6980}
+\bibitem{her_paper}
+Marcin Andrychowicz and Filip Wolski and Alex Ray and Jonas Schneider and Rachel Fong and Peter Welinder and Bob McGrew and Josh Tobin and Pieter Abbeel and Wojciech Zaremba, \textit{Hindsight Experience Replay}, CoRR, 2017, \href{http://arxiv.org/abs/1707.01495}{arXiv abs/1707.01495}
 \end{thebibliography}
 
 \end{document}
