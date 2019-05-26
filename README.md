@@ -71,3 +71,8 @@ In order to modify the behaviour of the robot arm and the prop models, the code 
   ```
 
 The project is configured with arm rotation enabled, and the target object is spawned at a random position.
+
+## Performance
+With the current project configuration, the accuracy of the agent is about 20% on the additional challenge. Approaches to improve the performance are discussed in the writeup.
+
+<img src="screenshot_advanced_challenge_2019-05-09.png">
