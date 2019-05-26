@@ -1,7 +1,7 @@
 
 # RoboND-DeepRL-Project-Solution
 
-<img src="screenshot_rl_arm.PNG">
+<img src="screenshot_rl_arm.png">
 
 This is a solution of the [Deep RL Arm Manipulation](https://github.com/udacity/RoboND-DeepRL-Project) project as part of the Robotics Nanodegree. This project is based on the Nvidia open source project [dusty-nv/jetson-reinforcement](https://github.com/dusty-nv/jetson-reinforcement) by Dustin Franklin.
 
@@ -18,11 +18,11 @@ The solution is documented in the [writeup report](writeup/writeup_deep_rl.pdf),
 ## Setup
 ### Jetson TX2
 1. Follow the setup instructions given in [jetson-reinforcement](https://github.com/dusty-nv/jetson-reinforcement).
-2. Replace the file `jetson-reinforcement/gazebo/ArmPlugin.cpp` with [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp).
+2. Replace the file `jetson-reinforcement/gazebo/ArmPlugin.cpp` with [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp) and the file `jetson-reinforcement/gazebo/gazebo-arm.world` with [`gazebo-arm.world`](gazebo/gazebo-arm.world). [This bash script](utils/copyFilesToJetsonReinforcement.sh) automates copying the files.
 3. Change working directory to the `build` folder and `make` the project.
 ### RoboND Workspace
 1. Follow the setup instructions given in the [Deep RL Arm Manipulation](https://github.com/udacity/RoboND-DeepRL-Project) project.
-2. Replace the file `RoboND-DeepRL-Project/gazebo/ArmPlugin.cpp` with [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp).
+2. Replace the file `RoboND-DeepRL-Project/gazebo/ArmPlugin.cpp` with [`ArmPlugin.cpp`](gazebo/ArmPlugin.cpp) and the file `RoboND-DeepRL-Project/gazebo/gazebo-arm.world` with [`gazebo-arm.world`](gazebo/gazebo-arm.world).
 3. Change working directory to the `build` folder and `make` the project.
 
 ## Usage
@@ -71,3 +71,8 @@ In order to modify the behaviour of the robot arm and the prop models, the code 
   ```
 
 The project is configured with arm rotation enabled, and the target object is spawned at a random position.
+
+## Performance
+With the current project configuration, the accuracy of the agent is about 20% on the additional challenge. Approaches to improve the performance are discussed in the writeup.
+
+<img src="screenshot_advanced_challenge_2019-05-09.png">

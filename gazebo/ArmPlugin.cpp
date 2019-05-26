@@ -57,8 +57,10 @@
 // Define Collision Parameters
 #define COLLISION_FILTER "ground_plane::link::collision"
 #define COLLISION_ITEM   "tube::link::tube_collision"
-#define COLLISION_POINT  "arm::gripperbase::gripper_link"
-//#define COLLISION_POINT  "arm::gripper_middle::middle_collision"
+// reference point defined in udacity/RoboND-DeepRL-Project
+#define COLLISION_POINT_ROBOND  "arm::gripperbase::gripper_link"
+// reference point defined in dusty-nv/jetson-reinforcement
+#define COLLISION_POINT  "arm::gripper_middle::middle_collision"
 
 // Animation Steps
 #define ANIMATION_STEPS 1000
@@ -273,7 +275,7 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 		if (collisionWithProp)
 		{
 			// check is true if gripper_link is second element in collision list
-			const bool collisionWithGripper = ( strcmp(contacts->contact(i).collision2().c_str(), COLLISION_POINT) == 0 );
+			const bool collisionWithGripper = ( strcmp(contacts->contact(i).collision2().c_str(), COLLISION_POINT_ROBOND) == 0 );
 			
 			// issue reward based on whether the gripper collided with prop
 			rewardHistory = collisionWithGripper ? REWARD_WIN : REWARD_LOSS;
@@ -511,26 +513,25 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 		// define condition for ground contact
 		const bool checkGroundContact = ( gripBBox.min.z <= groundContact || gripBBox.max.z <= groundContact );
 		
-		// issue reward for robot hitting the ground
 		if( checkGroundContact )
 		{
-						
+		        // issue reward for robot hitting the ground				
 			if(DEBUG){printf("Ground Contact, EOE\n");}
 
 			rewardHistory = REWARD_LOSS;
 			newReward     = true;
 			endEpisode    = true;
 		}
-		
-		// issue an interim reward based on the distance to the object 
-		if(!checkGroundContact)
+		else
 		{
-			const float distGoal = BoxDistance(gripBBox, propBBox); // compute the reward from distance to the goal
+		        // issue an interim reward based on the distance between
+                        // the gripper and the target object
+			const float distGoal = BoxDistance(gripBBox, propBBox);
 
 			//if(DEBUG){printf("distance('%s', '%s') = %f\n", gripper->GetName().c_str(), prop->model->GetName().c_str(), distGoal);}
 			if( episodeFrames > 1 )
 			{
-				// compute delta of distance to the goal
+				// compute temporal difference
 				const float distDelta  = lastGoalDistance - distGoal;
 
 				// compute moving average 
